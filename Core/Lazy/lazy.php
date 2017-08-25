@@ -19,10 +19,15 @@ class Lazy
         $route = new Route(); //实例化路由
         $controller = $route->controller;
         $action = $route->action;
-        $ctrFile = __APP__  . '/home/Controller/' . $controller . 'Controller.php';
+        $ctrFile = __APP__  . '/' . $route->module ;
+        if(!is_dir($ctrFile)){
+            throw new \Exception('模块不存在');
+        }
+        $ctrFile .= '/Controller/' . $controller . 'Controller.php';
+//        var_dump($ctrFile);die;
         if(is_file($ctrFile)){
             include $ctrFile;
-            $class = '\app\home\Controller\\' . $controller . 'Controller';
+            $class = '\app\\' . $route->module .'\Controller\\' . $controller . 'Controller';
 //            $classname = $controller . 'Controller';
             $reflector = new \ReflectionClass($class);
             if(!$reflector->hasMethod($action)){
@@ -53,14 +58,12 @@ class Lazy
     {
         //自动加载类
         //new \Core\route();
-        if (isset($classMap[$class])) {
-            echo 2;
+        if (isset(self::$classMap[$class])) {
             return true;
         } else {
-            echo 1;
             $class = str_replace('\\', '/', $class);
             $file = __PATH__ . '/' . $class . '.php';
-//        var_dump($class,$file);die;
+
             if (is_file($file)) {
                 include $file;
                 self::$classMap[$class] = $class;
@@ -70,4 +73,6 @@ class Lazy
             }
         }
     }
+
+
 }

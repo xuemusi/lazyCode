@@ -10,8 +10,10 @@ namespace Core\lib;
 class Route
 {
     public $controller;
+    public $module;
     public $action;
     public $request = [];
+
     public function __construct()
     {
         /**
@@ -22,26 +24,34 @@ class Route
         if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
             $pathArr = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
             if ($pathArr[0]) {
-                $this->controller = $pathArr[0];
-            }
-            if($pathArr[1]){
-                $this->action = $pathArr[1];
+                $this->module = $pathArr[0];
             }else{
+                $this->module = 'home';
+            }
+            if ($pathArr[1]) {
+                $this->controller = $pathArr[1];
+            } else {
+                $this->controller = 'index';
+            }
+            if ($pathArr[2]) {
+                $this->action = $pathArr[2];
+            } else {
                 $this->action = 'index';
             }
             //处理url多余的部分
             //index/index/a/2/b/2
-            if(count($pathArr) > 2){
-                $params = array_slice($pathArr,2);
+            if (count($pathArr) > 3) {
+                $params = array_slice($pathArr, 3);
                 $count = count($params);
                 $i = 0;
-                while ($i < $count){
-                    $_GET[$params[$i]] = isset($params[$i +1]) ? $params[$i +1] : '';
-                    $i = $i +2;
+                while ($i < $count) {
+                    $_GET[$params[$i]] = isset($params[$i + 1]) ? $params[$i + 1] : '';
+                    $i = $i + 2;
                 }
-                $this->request = array_merge($_GET,$_POST);
+                $this->request = array_merge($_GET, $_POST);
             }
         } else {
+            $this->module = 'home';
             $this->controller = 'index';
             $this->action = 'index';
         }

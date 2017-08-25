@@ -7,10 +7,17 @@
  */
 
 namespace app\home\Controller;
-class indexController
+use Core\lib\Controller;
+use Core\lib\Model;
+
+class indexController extends Controller
 {
-    public function index($a=2,$b=2){
-        var_dump($a,$b);
-        echo 'controller index success';
+    public function index(){
+//        echo 'controller index success';
+//        $model = new  Model();
+//        $ret = $model->query('select * from t6_user limit 1');
+//        var_dump($ret->fetchAll());
+        $this->assign('title','标题啊');
+        $this->display('index/index');
     }
 }
