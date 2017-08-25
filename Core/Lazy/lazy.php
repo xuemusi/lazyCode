@@ -23,6 +23,7 @@ class Lazy
         if(is_file($ctrFile)){
             include $ctrFile;
             $class = '\app\home\Controller\\' . $controller . 'Controller';
+            //待优化，采用反射优化
             $init = new $class();
             $init->$action();
         }else{
