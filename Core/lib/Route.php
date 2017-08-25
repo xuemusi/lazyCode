@@ -11,7 +11,7 @@ class Route
 {
     public $controller;
     public $action;
-
+    public $request = [];
     public function __construct()
     {
         /**
@@ -39,6 +39,7 @@ class Route
                     $_GET[$params[$i]] = isset($params[$i +1]) ? $params[$i +1] : '';
                     $i = $i +2;
                 }
+                $this->request = array_merge($_GET,$_POST);
             }
         } else {
             $this->controller = 'index';

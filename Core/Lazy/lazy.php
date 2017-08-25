@@ -23,9 +23,27 @@ class Lazy
         if(is_file($ctrFile)){
             include $ctrFile;
             $class = '\app\home\Controller\\' . $controller . 'Controller';
+//            $classname = $controller . 'Controller';
+            $reflector = new \ReflectionClass($class);
+            if(!$reflector->hasMethod($action)){
+                throw new \Exception('找不到方法');
+            }
+            $action = $reflector->getMethod($action);
+            $params = $action->getParameters();
+            $method_params = [];
+            if($params){
+                foreach ($params as $v){
+                    if(isset($route->request[$v->name])){
+                        $method_params[] = $route->request[$v->name];
+                    }else{
+                        $method_params[] = $v->getDefaultValue();
+                    }
+                }
+            }
             //待优化，采用反射优化
             $init = new $class();
-            $init->$action();
+            $action->invokeArgs($init,$method_params);
+//            $init->$action();
         }else{
             throw new \Exception('找不到控制器' . $controller);
         }

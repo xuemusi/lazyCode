@@ -9,7 +9,8 @@
 namespace app\home\Controller;
 class indexController
 {
-    public function index(){
+    public function index($a=2,$b=2){
+        var_dump($a,$b);
         echo 'controller index success';
     }
 }
