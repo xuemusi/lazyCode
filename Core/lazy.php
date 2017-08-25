@@ -10,10 +10,10 @@ if(DEBUG){
 }else{
     ini_set('display_errors','Off');
 }
-
+//var_dump( __CORE__ . 'Common/helper.php');die;
 //引入函数
-include APP_PATH . 'Common/helper.php';
+include __CORE__ . 'Common/helper.php';
 //引入核心类
-include APP_PATH . 'Lazy/lazy.php';
-spl_autoload_register('Lazy::load');
-\Lazy\Lazy::run();
+include __CORE__ . 'Lazy/lazy.php';
+spl_autoload_register('\Core\Lazy::load');
+\Core\Lazy::run();
