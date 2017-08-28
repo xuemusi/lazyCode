@@ -7,6 +7,7 @@
  */
 
 namespace Core;
+use Core\lib\log;
 use Core\lib\Route;
 
 class Lazy
@@ -16,6 +17,8 @@ class Lazy
 
     static public function run()
     {
+        log::init();//log初始化
+        log::log('初始化');
         $route = new Route(); //实例化路由
 //        $controller = $route->controller;
 //        $action = $route->action;
