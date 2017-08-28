@@ -23,20 +23,20 @@ class Route
          */
         if (isset($_SERVER['REQUEST_URI']) && $_SERVER['REQUEST_URI'] != '/') {
             $pathArr = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-            if ($pathArr[0]) {
+            if (isset($pathArr[0])) {
                 $this->module = $pathArr[0];
             }else{
-                $this->module = 'home';
+                $this->module = config::get('DEFAULT_MODULE','route');
             }
-            if ($pathArr[1]) {
+            if (isset($pathArr[1])) {
                 $this->controller = $pathArr[1];
             } else {
-                $this->controller = 'index';
+                $this->controller = config::get('DEFAULT_CONTROLLER','route');
             }
-            if ($pathArr[2]) {
+            if (isset($pathArr[2])) {
                 $this->action = $pathArr[2];
             } else {
-                $this->action = 'index';
+                $this->action = config::get('DEFAULT_ACTION','route');
             }
             //处理url多余的部分
             //index/index/a/2/b/2
@@ -51,9 +51,9 @@ class Route
                 $this->request = array_merge($_GET, $_POST);
             }
         } else {
-            $this->module = 'home';
-            $this->controller = 'index';
-            $this->action = 'index';
+            $this->module = config::get('DEFAULT_MODULE','route');
+            $this->controller = config::get('DEFAULT_CONTROLLER','route');
+            $this->action = config::get('DEFAULT_ACTION','route');
         }
     }
 }
