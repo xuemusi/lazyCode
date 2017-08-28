@@ -9,15 +9,14 @@
 namespace Core\lib;
 class Controller
 {
-    public $assign = [];
 
     public function assign($name, $value)
     {
-        $this->assign[$name] = $value;
+        View::assign($name,$value);
     }
 
     public function display($path, $suffix = 'html')
     {
-//        $file =
+        View::display($path,$suffix);
     }
 }

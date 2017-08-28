@@ -17,23 +17,27 @@ class Lazy
     static public function run()
     {
         $route = new Route(); //实例化路由
-        $controller = $route->controller;
-        $action = $route->action;
-        $ctrFile = __APP__  . '/' . $route->module ;
+//        $controller = $route->controller;
+//        $action = $route->action;
+        define('__MODULE__',$route->module);//模块常量
+        define('__CONTROLLER__',$route->controller);//控制器常量
+        define('__ACCTION__',$route->action);//方法常量
+
+        $ctrFile = __APP__  . '/' . __MODULE__ ;
         if(!is_dir($ctrFile)){
             throw new \Exception('模块不存在');
         }
-        $ctrFile .= '/Controller/' . $controller . 'Controller.php';
+        $ctrFile .= '/Controller/' . __CONTROLLER__ . 'Controller.php';
 //        var_dump($ctrFile);die;
         if(is_file($ctrFile)){
             include $ctrFile;
-            $class = '\app\\' . $route->module .'\Controller\\' . $controller . 'Controller';
+            $class = '\app\\' . __MODULE__ .'\Controller\\' . __CONTROLLER__ . 'Controller';
 //            $classname = $controller . 'Controller';
             $reflector = new \ReflectionClass($class);
-            if(!$reflector->hasMethod($action)){
+            if(!$reflector->hasMethod(__ACCTION__)){
                 throw new \Exception('找不到方法');
             }
-            $action = $reflector->getMethod($action);
+            $action = $reflector->getMethod(__ACCTION__);
             $params = $action->getParameters();
             $method_params = [];
             if($params){
@@ -50,7 +54,7 @@ class Lazy
             $action->invokeArgs($init,$method_params);
 //            $init->$action();
         }else{
-            throw new \Exception('找不到控制器' . $controller);
+            throw new \Exception('找不到控制器' . __CONTROLLER__);
         }
     }
 
