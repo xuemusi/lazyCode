@@ -22,7 +22,7 @@ class Lazy
         define('__MODULE__',$route->module);//模块常量
         define('__CONTROLLER__',$route->controller);//控制器常量
         define('__ACCTION__',$route->action);//方法常量
-        log::log('初始化',$_SERVER);
+        log::log('初始化');
         $ctrFile = __APP__  . '/' . __MODULE__ ;
         if(!is_dir($ctrFile)){
             throw new \Exception('模块不存在');
