@@ -6,12 +6,10 @@
  * Time: 11:25
  */
 return [
-    'DB_TYPE' => 'MysqlPdo',
-    'DB_HOST' => '127.0.0.1',
-    'DB_USER' => 'homestead',
-    'DB_PWD' => 'secret',
-    'DB_PORT' => 3306,
-    'DB_NAME' => 'dev_db_et',
-    'DB_CHARSET' => 'utf8mb4',
-    'DB_PREFIX' => 'dux_',
+    'database_type' => 'mysql',
+    'database_name' => 'dev_db_et',
+    'server' => 'localhost',
+    'username' => 'homestead',
+    'password' => 'secret',
+    'charset' => 'utf8'
 ];

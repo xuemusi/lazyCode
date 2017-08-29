@@ -17,15 +17,12 @@ class Lazy
 
     static public function run()
     {
-        log::init();//log初始化
-        log::log('初始化');
+        log::init();//log初始
         $route = new Route(); //实例化路由
-//        $controller = $route->controller;
-//        $action = $route->action;
         define('__MODULE__',$route->module);//模块常量
         define('__CONTROLLER__',$route->controller);//控制器常量
         define('__ACCTION__',$route->action);//方法常量
-
+        log::log('初始化',$_SERVER);
         $ctrFile = __APP__  . '/' . __MODULE__ ;
         if(!is_dir($ctrFile)){
             throw new \Exception('模块不存在');

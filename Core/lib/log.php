@@ -17,7 +17,7 @@ class log
         self::$class = new $class;
     }
 
-    static public function log($msg){
-        self::$class->log($msg);
+    static public function log($msg,$data =[],$path = false){
+        self::$class->log($msg,$data,$path);
     }
 }

@@ -5,7 +5,14 @@
  * Date: 2017/8/23
  * Time: 13:56
  */
+include __PATH__ .'/vendor/autoload.php';
 if(DEBUG){
+    $whoop = new \Whoops\Run;
+    $erroTitle = 'lazyCode 框架出错了';
+    $option = new \Whoops\Handler\PrettyPageHandler();
+    $option->setPageTitle($erroTitle);
+    $whoop->pushHandler($option);
+    $whoop->register();
     ini_set('display_errors','On');
 }else{
     ini_set('display_errors','Off');
