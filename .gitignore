@@ -3,3 +3,4 @@
 Core/config/db.php
 resource/log/*
 vendor
+composer.lock
