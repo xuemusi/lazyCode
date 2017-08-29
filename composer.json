@@ -6,9 +6,10 @@
         "PHP","PHP Framework"
     ],
     "require":{
-        "php" : ">= 5.3.0",
+        "php" : ">= 5.6.0",
         "filp/whoops":"*",
         "symfony/var-dumper":"*",
-        "catfan/medoo":"*"
+        "catfan/medoo":"*",
+        "twig/twig":"*"
     }
 }

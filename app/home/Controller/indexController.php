@@ -22,4 +22,12 @@ class indexController extends Controller
         $this->assign('title3','标题啊3');
         $this->display('index/index');
     }
+
+    public function test(){
+//        echo 'controller index success';
+        $this->assign('title','标题啊333');
+        $this->assign('title2','标题啊3333');
+        $this->assign('title3','标题啊223asdf3');
+        $this->display('index/index');
+    }
 }

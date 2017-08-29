@@ -29,7 +29,14 @@ class View
         if(!is_file($file)){
             throw new \Exception('视图文件不存在');
         }
-        extract(self::$assign);
-        include $file;
+//        extract(self::$assign);
+//        include $file;
+        $loader = new \Twig_Loader_Filesystem(__PATH__ . '/resource/views/'. __MODULE__);
+        $twig = new \Twig_Environment($loader, array(
+            'cache' => __PATH__ . '/resource/log/compilation_cache',
+            'debug' => DEBUG
+        ));
+        $template = $twig->load($path . '.'. $suffix);
+        echo $template->render(self::$assign);
     }
 }
