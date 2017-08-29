@@ -56,8 +56,10 @@ if (!function_exists('get_multi_arr')){
         $keysArr = explode('.',$keys);
         $ret = [];
         foreach ($keysArr as $item){
+//            var_dump($item,$arr);
             if(isset($arr[$item])){
                 $ret = $arr[$item];
+                $arr = $arr[$item];
             }else{
                 $ret = null;
             }

@@ -11,8 +11,8 @@ class config
 {
     static public $config = [];
     static public function get($name,$file){
-        if(isset(self::$config[$name])){
-            return self::$config[$name];
+        if(isset(self::$config[$name.$file])){
+            return self::$config[$name.$file];
         }
         $file = __CORE__ . 'config/' . $file . '.php';
 //        var_dump($file);die;
@@ -24,8 +24,9 @@ class config
             return $config;
         }
         $ret = get_multi_arr($name,$config);
+//        var_dump($name,$ret);
         if($ret){
-            self::$config[$name] = $ret;
+            self::$config[$name.$file] = $ret;
             return $ret;
         }else{
             throw new \Exception($name . '配置不存在');

@@ -8,4 +8,7 @@
 
 return [
     'DRIVE' => 'file', //日志驱动类型
+    'OPTION' => [
+        'PATH' => __PATH__ . '/resource/log'
+    ],
 ];

@@ -7,9 +7,22 @@
  */
 
 namespace Core\lib\drive\log;
+use Core\lib\config;
+
 class file
 {
-    public function log($msg){
-        var_dump($msg);die;
+    public $basePath;
+    public function __construct()
+    {
+        $this->basePath = config::get('OPTION.PATH','log') . '/' . date('Ymd');
+    }
+
+    public function log($msg,$data =[],$path = false){
+        if(!is_dir($this->basePath)){
+            mkdir($this->basePath,'0777',true);
+        }
+        $log = $msg . '：date=' . date('[Y-m-d H:i:m]', time()) . ' data= ' . json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        $path = $path === false ? $this->basePath . '/' . date('YmdH') . '.log' : $path;
+        return file_put_contents($path ,$log,FILE_APPEND);
     }
 }
