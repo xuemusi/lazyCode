@@ -19,7 +19,7 @@ class file
 
     public function log($msg,$data =[],$path = false){
         if(!is_dir($this->basePath)){
-            mkdir($this->basePath,'777',true);
+            mkdir($this->basePath,0777,true);
         }
         $log = implode('/',[
                 __MODULE__,__CONTROLLER__,__ACCTION__

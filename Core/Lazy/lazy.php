@@ -9,6 +9,7 @@
 namespace Core;
 use Core\lib\log;
 use Core\lib\Route;
+use Core\lib\session;
 
 class Lazy
 {
@@ -17,6 +18,7 @@ class Lazy
 
     static public function run()
     {
+//        session::init();//session初始化
         log::init();//log初始
         $route = new Route(); //实例化路由
         define('__MODULE__',$route->module);//模块常量
