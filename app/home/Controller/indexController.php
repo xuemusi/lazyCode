@@ -15,8 +15,11 @@ class indexController extends Controller
     public function index(){
 //        echo 'controller index success';
         $model = new  Model();
-//        $ret = $model->query('select * from t6_user limit 1');
+        $ret = $model->query('select * from t6_user limit 1');
         dump($model);
+//        session_start();
+        $_SESSION['admin'] = $_SERVER;
+        var_dump($_SESSION['admin']);
         $this->assign('title','标题啊');
         $this->assign('title2','标题啊2');
         $this->assign('title3','标题啊3');

@@ -1,5 +1,7 @@
 <?php
-class redisSession{
+namespace Core\lib\drive\session;
+use Core\lib\config;
+class redis implements \SessionHandlerInterface {
     /**
      * 保存session的数据库表的信息
      */
@@ -15,7 +17,8 @@ class redisSession{
      * 构造函数
      * @param $options 设置信息数组
      */
-    public function __construct($options=array()){
+    public function __construct(){
+        $options = config::get('SESSION_REDIS','session');
         if(!class_exists("redis", false)){
             throw new Exception('安装redis扩展');
         }
@@ -26,41 +29,27 @@ class redisSession{
     }
 
     /**
-     * 开始使用该驱动的session
-     */
-    public function init(){
-        if($this->_options['host'] === null ||
-            $this->_options['port'] === null ||
-            $this->_options['lifeTime'] === null
-        ){
-            return false;
-        }
-        //设置session处理函数
-        session_set_save_handler(
-            array($this, 'open'),
-            array($this, 'close'),
-            array($this, 'read'),
-            array($this, 'write'),
-            array($this, 'destory'),
-            array($this, 'gc')
-        );
-    }
-    /**
      * 自动开始回话或者session_start()开始回话后第一个调用的函数
      * 类似于构造函数的作用
      * @param $savePath 默认的保存路径
      * @param $sessionName 默认的参数名，PHPSESSID
      */
     public function open($savePath, $sessionName){
+        if($this->_options['host'] === null ||
+            $this->_options['port'] === null ||
+            $this->_options['lifeTime'] === null
+        ){
+            return false;
+        }
         if(is_resource($this->_options['handler'])) return true;
         //连接redis
-        $redisHandle = new Redis();
+        $redisHandle = new \Redis();
         $redisHandle->connect($this->_options['host'], $this->_options['port']);
         if(!$redisHandle){
             return false;
         }
-
         $this->_options['handler'] = $redisHandle;
+
 //        $this->gc(null);
         return true;
 
@@ -70,6 +59,7 @@ class redisSession{
      * 类似于析构函数，在write之后调用或者session_write_close()函数之后调用
      */
     public function close(){
+//        echo 2;die;
         return $this->_options['handler']->close();
     }
 
@@ -80,7 +70,13 @@ class redisSession{
      */
     public function read($sessionId){
         $sessionId = $this->_options['prefix'].$sessionId;
-        return $this->_options['handler']->get($sessionId);
+        $session_data = $this->_options['handler']->get($sessionId);
+        if(is_null($session_data))
+        {
+            $session_data = '';  //use empty string instead of null!
+        }
+        $session_data = (string) $session_data;
+        return $session_data;
     }
 
     /**
@@ -97,7 +93,7 @@ class redisSession{
      * 主动销毁session会话
      * @param $sessionId 要销毁的会话的唯一id
      */
-    public function destory($sessionId){
+    public function destroy($sessionId){
         $sessionId = $this->_options['prefix'].$sessionId;
 //        $array = $this->print_stack_trace();
 //        log::write($array);

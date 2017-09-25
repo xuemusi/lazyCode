@@ -1,109 +1,81 @@
 <?php
 namespace Core\lib\drive\session;
 //类定义
-class mysql
+use Core\lib\config;
+
+/**
+ * session数据库引擎
+ * Author: xuemusi
+ * Class mysql
+ * @package Core\lib\drive\session
+ * *********************************
+ * 如果数据库不存在，请先创建数据库
+ *
+    CREATE TABLE `Session` (
+    `Session_Id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+    `Session_Expires` datetime NOT NULL,
+    `Session_Data` text COLLATE utf8_unicode_ci,
+    PRIMARY KEY (`Session_Id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ */
+class mysql implements \SessionHandlerInterface
 {
-    function init()
+    private $link;
+
+    public function open($savePath, $sessionName)
     {
-        $domain = '.infor96.com';
-        //不使用 GET/POST 变量方式
-        ini_set('session.use_trans_sid',    0);
-        //设置垃圾回收最大生存时间
-        ini_set('session.gc_maxlifetime',   MY_SESS_TIME);
-        //使用 COOKIE 保存 SESSION ID 的方式
-        ini_set('session.use_cookies',      1);
-        ini_set('session.cookie_path',      '/');
-        //多主机共享保存 SESSION ID 的 COOKIE
-        ini_set('session.cookie_domain',    $domain);
-        //将 session.save_handler 设置为 user，而不是默认的 files
-        session_module_name('user');
-        //定义 SESSION 各项操作所对应的方法名：
-        session_set_save_handler(
-            array('\Core\lib\drive\session\mysql', 'open'),   //对应于静态方法 My_Sess::open()，下同。
-            array('\Core\lib\drive\session\mysql', 'close'),
-            array('\Core\lib\drive\session\mysql', 'read'),
-            array('\Core\lib\drive\session\mysql', 'write'),
-            array('\Core\lib\drive\session\mysql', 'destroy'),
-            array('\Core\lib\drive\session\mysql', 'gc')
-        );
-    }   //end function
-    function open($save_path, $session_name) {
-        return true;
-    }   //end function
-    function close() {
-        global $MY_SESS_CONN;
-
-        if ($MY_SESS_CONN) {    //关闭数据库连接
-            $MY_SESS_CONN->Close();
+        $config = config::get('','db');
+        $link = mysqli_connect($config['server'],$config['username'],$config['password'],$config['database_name']);
+        if($link){
+            $this->link = $link;
+            return true;
+        }else{
+            return false;
         }
+    }
+    public function close()
+    {
+        mysqli_close($this->link);
         return true;
-    }   //end function
+    }
+    public function read($id)
+    {
+        $result = mysqli_query($this->link,"SELECT Session_Data FROM Session WHERE Session_Id = '".$id."' AND Session_Expires > '".date('Y-m-d H:i:s')."'");
+        if($row = mysqli_fetch_assoc($result)){
+            return $row['Session_Data'];
+        }else{
+            return "";
+        }
+    }
+    public function write($id, $data)
+    {
+        $DateTime = date('Y-m-d H:i:s');
+        $NewDateTime = date('Y-m-d H:i:s',strtotime($DateTime.' + 1 hour'));
+        $result = mysqli_query($this->link,"REPLACE INTO Session SET Session_Id = '".$id."', Session_Expires = '".$NewDateTime."', Session_Data = '".$data."'");
+        if($result){
+            // var_dump("REPLACE INTO Session SET Session_Id = '".$id."', Session_Expires = '".$NewDateTime."', Session_Data = '".$data."'");
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function destroy($id)
+    {
+        $result = mysqli_query($this->link,"DELETE FROM Session WHERE Session_Id ='".$id."'");
+        if($result){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public function gc($maxlifetime)
+    {
+        $result = mysqli_query($this->link,"DELETE FROM Session WHERE ((UNIX_TIMESTAMP(Session_Expires) + ".$maxlifetime.") < ".$maxlifetime.")");
+        if($result){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
 
-    function read($sesskey) {
-        global $MY_SESS_CONN;
-
-        $sql = 'SELECT data FROM sess WHERE sesskey=' . $MY_SESS_CONN->qstr($sesskey) . ' AND expiry>=' . time();
-        $rs =& $MY_SESS_CONN->Execute($sql);
-        if ($rs) {
-            if ($rs->EOF) {
-                return '';
-            } else {    //读取到对应于 SESSION ID 的 SESSION 数据
-                $v = $rs->fields[0];
-                $rs->Close();
-                return $v;
-            }   //end if
-        }   //end if
-        return '';
-    }   //end function
-
-    function write($sesskey, $data) {
-        global $MY_SESS_CONN;
-
-        $qkey = $MY_SESS_CONN->qstr($sesskey);
-        $expiry = time() + My_SESS_TIME;    //设置过期时间
-
-        //写入 SESSION
-        $arr = array(
-            'sesskey' => $qkey,
-            'expiry'  => $expiry,
-            'data'    => $data);
-        $MY_SESS_CONN->Replace('sess', $arr, 'sesskey', $autoQuote = true);
-        return true;
-    }   //end function
-
-    function destroy($sesskey) {
-        global $MY_SESS_CONN;
-
-        $sql = 'DELETE FROM sess WHERE sesskey=' . $MY_SESS_CONN->qstr($sesskey);
-        $rs =& $MY_SESS_CONN->Execute($sql);
-        return true;
-    }   //end function
-
-    function gc($maxlifetime = null) {
-        global $MY_SESS_CONN;
-
-        $sql = 'DELETE FROM sess WHERE expiry<' . time();
-        $MY_SESS_CONN->Execute($sql);
-        //由于经常性的对表 sess 做删除操作，容易产生碎片，
-        //所以在垃圾回收中对该表进行优化操作。
-        $sql = 'OPTIMIZE TABLE sess';
-        $MY_SESS_CONN->Execute($sql);
-        return true;
-    }   //end function
-}   ///:~
-define('MY_SESS_TIME', 3600);   //SESSION 生存时长
-
-//使用 ADOdb 作为数据库抽象层。
-require_once('adodb/adodb.inc.php');
-//数据库配置项，可放入配置文件中（如：config.inc.php）。
-$db_type = 'mysql';
-$db_host = '192.168.212.1';
-$db_user = 'sess_user';
-$db_pass = 'sess_pass';
-$db_name = 'sess_db';
-//创建数据库连接，这是一个全局变量。
-$GLOBALS['MY_SESS_CONN'] =& ADONewConnection($db_type);
-$GLOBALS['MY_SESS_CONN']->Connect( $db_host, $db_user, $db_pass, $db_name);
-//初始化 SESSION 设置，必须在 session_start() 之前运行！！
-My_Sess::init();
-?>
