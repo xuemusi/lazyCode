@@ -22,6 +22,7 @@ class file
             mkdir($this->basePath,0777,true);
         }
         $log = implode('/',[
+                $_SERVER['SERVER_NAME'],
                 __MODULE__,__CONTROLLER__,__ACCTION__
             ]) .'  ' . $msg . '：date=' . date('[Y-m-d H:i:m]', time()) . ' data= ' . json_encode($data, JSON_UNESCAPED_UNICODE) . PHP_EOL;
         $path = $path === false ? $this->basePath . '/' . date('YmdH') . '.log' : $path;
