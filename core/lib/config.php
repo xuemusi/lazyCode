@@ -6,7 +6,7 @@
  * Time: 10:52
  */
 
-namespace Core\lib;
+namespace core\lib;
 class config
 {
     static public $config = [];

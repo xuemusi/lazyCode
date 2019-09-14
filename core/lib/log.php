@@ -6,14 +6,14 @@
  * Time: 11:38
  */
 
-namespace Core\lib;
+namespace core\lib;
 class log
 {
     static $class;
     static public function init(){
         //确定存储方式
         $drive = config::get('DRIVE','log');
-        $class = '\Core\lib\drive\log\\' . $drive;
+        $class = '\core\lib\drive\log\\' . $drive;
         self::$class = new $class;
     }
 

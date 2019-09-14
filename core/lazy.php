@@ -19,8 +19,8 @@ if(DEBUG){
 }
 //var_dump( __CORE__ . 'Common/helper.php');die;
 //引入函数
-include __CORE__ . 'Common/helper.php';
+include __CORE__ . 'common/helper.php';
 //引入核心类
 include __CORE__ . 'Lazy/lazy.php';
-spl_autoload_register('\Core\Lazy::load');
-\Core\Lazy::run();
+spl_autoload_register('\core\Lazy::load');
+\core\Lazy::run();

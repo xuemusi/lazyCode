@@ -6,7 +6,7 @@
  * Time: 16:47
  */
 
-namespace Core\lib;
+namespace core\lib;
 class Controller
 {
 

@@ -1,6 +1,6 @@
 <?php
-namespace Core\lib\drive\session;
-use Core\lib\config;
+namespace core\lib\drive\session;
+use core\lib\config;
 class redis implements \SessionHandlerInterface {
     /**
      * 保存session的数据库表的信息

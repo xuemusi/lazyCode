@@ -6,8 +6,8 @@
  * Time: 11:40
  */
 
-namespace Core\lib\drive\log;
-use Core\lib\config;
+namespace core\lib\drive\log;
+use core\lib\config;
 
 class file
 {

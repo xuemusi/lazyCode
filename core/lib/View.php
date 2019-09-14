@@ -6,7 +6,7 @@
  * Time: 17:23
  */
 
-namespace Core\lib;
+namespace core\lib;
 class View
 {
 

@@ -7,8 +7,8 @@
  */
 
 namespace app\home\Controller;
-use Core\lib\Controller;
-use Core\lib\Model;
+use core\lib\Controller;
+use core\lib\Model;
 
 class indexController extends Controller
 {

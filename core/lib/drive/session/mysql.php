@@ -1,13 +1,13 @@
 <?php
-namespace Core\lib\drive\session;
+namespace core\lib\drive\session;
 //类定义
-use Core\lib\config;
+use core\lib\config;
 
 /**
  * session数据库引擎
  * Author: xuemusi
  * Class mysql
- * @package Core\lib\drive\session
+ * @package core\lib\drive\session
  * *********************************
  * 如果数据库不存在，请先创建数据库
  *

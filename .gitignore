@@ -1,6 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
-Core/config/db.php
+core/config/db.php
 resource/log/*
 vendor
 composer.lock

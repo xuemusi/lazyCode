@@ -1,5 +1,5 @@
 <?php
-namespace Core\lib;
+namespace core\lib;
 
 class session{
     public static $config;
@@ -25,7 +25,7 @@ class session{
         //判断驱动
         if(self::$config['SESSION_TYPE']){
             //确定session驱动
-            $class = '\Core\lib\drive\session\\' . self::$config['SESSION_TYPE'];
+            $class = '\core\lib\drive\session\\' . self::$config['SESSION_TYPE'];
             $handler = new $class();
             if(!$handler){
                 throw new \Exception('session驱动不存在');

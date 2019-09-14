@@ -3,9 +3,10 @@
  * Created by PhpStorm.
  * User: xumusi
  * Date: 2017/8/28
- * Time: 11:42
+ * Time: 11:41
  */
-namespace Core\lib\drive\log;
-class memcached {
+
+namespace core\lib\drive\log;
+class redis {
 
 }

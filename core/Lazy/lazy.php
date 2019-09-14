@@ -6,10 +6,10 @@
  * Time: 14:26
  */
 
-namespace Core;
-use Core\lib\log;
-use Core\lib\Route;
-use Core\lib\session;
+namespace core;
+use core\lib\log;
+use core\lib\Route;
+use core\lib\session;
 
 class Lazy
 {
@@ -29,11 +29,11 @@ class Lazy
         if(!is_dir($ctrFile)){
             throw new \Exception('模块不存在');
         }
-        $ctrFile .= '/Controller/' . __CONTROLLER__ . 'Controller.php';
+        $ctrFile .= '/controller/' . __CONTROLLER__ . 'Controller.php';
 //        var_dump($ctrFile);die;
         if(is_file($ctrFile)){
             include $ctrFile;
-            $class = '\app\\' . __MODULE__ .'\Controller\\' . __CONTROLLER__ . 'Controller';
+            $class = '\app\\' . __MODULE__ .'\controller\\' . __CONTROLLER__ . 'Controller';
 //            $classname = $controller . 'Controller';
             $reflector = new \ReflectionClass($class);
             if(!$reflector->hasMethod(__ACCTION__)){
@@ -63,7 +63,7 @@ class Lazy
     static public function load($class)
     {
         //自动加载类
-        //new \Core\route();
+        //new \core\route();
         if (isset(self::$classMap[$class])) {
             return true;
         } else {

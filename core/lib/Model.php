@@ -5,7 +5,7 @@
  * Date: 2017/8/25
  * Time: 16:24
  */
-namespace Core\lib;
+namespace core\lib;
 use Medoo\Medoo;
 
 class Model extends Medoo {
